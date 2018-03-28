@@ -1,0 +1,15 @@
+Package: chemhelper
+Version: 0.0.0.9000
+Title: Helper Functions For Dealing With GCMS and LCMS data from IonAnalytics
+Description: Provides helper functions for parsing data exported from IonAnalytics, calculating retention indecies, and other miscelanous helper functions to assist in data wrangling.
+Authors@R: person("Eric", "Scott", , "scottericr@gmail.com", c("aut", "cre"))
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.0.1
+Imports: 
+    readr,
+    dplyr,
+    stringr
