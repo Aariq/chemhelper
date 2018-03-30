@@ -12,4 +12,6 @@ RoxygenNote: 6.0.1
 Imports: 
     readr,
     dplyr,
-    stringr
+    stringr,
+    ropls,
+    tibble

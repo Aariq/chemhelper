@@ -2,9 +2,12 @@
 
 export(calc_RI)
 export(chem_scale)
+export(get_VIP)
 export(parse_IA)
 export(read_IA)
 import(dplyr)
 import(readr)
+import(ropls)
 import(stringr)
+import(tibble)
 importFrom(stats,sd)
