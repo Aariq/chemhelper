@@ -14,4 +14,6 @@ Imports:
     dplyr,
     stringr,
     ropls,
-    tibble
+    tibble,
+    purrr,
+    webchem
