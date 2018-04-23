@@ -7,7 +7,10 @@
 format_CAS(x)
 }
 \arguments{
-\item{x}{a string of digits}
+\item{x}{an integer or character vector}
+}
+\value{
+a character vector of correctly formatted CAS numbers
 }
 \description{
 Format numbers correctly as CAS numbers

@@ -16,4 +16,5 @@ Imports:
     ropls,
     tibble,
     purrr,
-    webchem
+    webchem,
+    broom
