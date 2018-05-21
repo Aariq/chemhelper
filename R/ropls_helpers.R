@@ -84,7 +84,7 @@ get_plotdata <- function(model){
     scores <- model@scoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
     plot_data <- scores
     
-    var_explained <- model@pcaVarVn
+    var_explained <- model@modelDF[ , 1:2]
     
     return(list("plot_data" = plot_data,
                 "var_explained" = var_explained))
