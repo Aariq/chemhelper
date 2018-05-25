@@ -4,17 +4,17 @@
 \alias{calc_RI}
 \title{Calculate Van Den Dool and Kratz Retention Indicies}
 \usage{
-calc_RI(rt, alkanesRT, C_num)
+calc_RI(rts, alkanesRT, C_num)
 }
 \arguments{
-\item{rt}{The retention time of the compound}
+\item{rts}{A vector of retention times}
 
-\item{alkanesRT}{A vector of retention times of alkanes, in descending order}
+\item{alkanesRT}{A vector of retention times of standard alkanes, in descending order}
 
 \item{C_num}{A vector of the numbers of carbons for each of the alkanes}
 }
 \value{
-A retention index
+A vector of retention indices
 }
 \description{
 Calculate Van Den Dool and Kratz Retention Indicies

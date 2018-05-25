@@ -1,20 +1,13 @@
-#' Calculate Van Den Dool and Kratz Retention Indicies
+#' Calculate a single Van Den Dool and Kratz Retention Index
 #'
 #' @param rt The retention time of the compound
 #' @param alkanesRT A vector of retention times of alkanes, in descending order
 #' @param C_num A vector of the numbers of carbons for each of the alkanes
 #'
 #' @return A retention index
-#' @export
 #'
-#' @examples
-#' alkanes <- data.frame(RT = c(1.88, 2.23, 5.51, 8.05, 10.99,
-#'                              14.10, 17.20, 20.20, 22.90, 25.60,
-#'                              28.10, 30.50, 32.81, 35.22, 37.30),
-#'                       C_num = 6:20)
-#' calc_RI(11.237, alkanes$RT, alkanes$C_num)
 #'
-calc_RI <-
+.VDDK_RI <-
   function(rt, alkanesRT, C_num){
     if(length(alkanesRT) != length(C_num)){
       stop("Supplied alkaneRT and C_num must be equal length")
@@ -39,3 +32,24 @@ calc_RI <-
       return(RI)
     }
   }
+
+#' Calculate Van Den Dool and Kratz Retention Indicies
+#'
+#' @param rts A vector of retention times
+#' @param alkanesRT A vector of retention times of standard alkanes, in descending order
+#' @param C_num A vector of the numbers of carbons for each of the alkanes
+#'
+#' @return A vector of retention indices
+#' @export
+#'
+#' @examples
+#' alkanes <- data.frame(RT = c(1.88, 2.23, 5.51, 8.05, 10.99,
+#'                              14.10, 17.20, 20.20, 22.90, 25.60,
+#'                              28.10, 30.50, 32.81, 35.22, 37.30),
+#'                       C_num = 6:20)
+#' calc_RI(11.237, alkanes$RT, alkanes$C_num)
+#' 
+calc_RI <- function(rts, alkanesRT, C_num) {
+  sapply(rts, .VDDK_RI, alkanesRT = alkanesRT, C_num = C_num, simplify = TRUE)
+}
+
