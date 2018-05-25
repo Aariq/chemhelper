@@ -23,9 +23,9 @@ calc_RI <-
     }else{
       leng = length(alkanesRT)
       n_int = findInterval(rt, alkanesRT)
-      if(n_int == 1){
+      if(n_int == 0){
         warning("Compound RT is earlier than that of smallest alkane.")
-        n_pos = n_int
+        n_pos = 1
       }else if(n_int == leng){
         warning("Compound RT is later than that of largest alkane.")
         n_pos = leng - 1
