@@ -7,7 +7,7 @@
 get_plotdata(model)
 }
 \arguments{
-\item{model}{an object created by ropls::opls()}
+\item{model}{An object created by ropls::opls()}
 }
 \value{
 For \strong{PCA}, a list containing: principal component scores (\code{plot_data}, a data frame) and variance explained (\code{var_explained}), a named vector) for PC axes

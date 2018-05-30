@@ -34,8 +34,10 @@
   }
 
 #' Calculate Van Den Dool and Kratz Retention Indicies
+#' 
+#' @description This function calculates retention indices using the Van Den Dool and Kratz [equation](https://webbook.nist.gov/chemistry/gc-ri/)
 #'
-#' @param rts A vector of retention times
+#' @param rts A vector of retention times to be converted to retention indices
 #' @param alkanesRT A vector of retention times of standard alkanes, in descending order
 #' @param C_num A vector of the numbers of carbons for each of the alkanes
 #'

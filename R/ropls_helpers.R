@@ -53,7 +53,7 @@ format_CAS <- function(x){
 #' 
 #' Extracts relevant data from an "opls" object for making annotated score plots with ggplot2 or other plotting packages.
 #'
-#' @param model an object created by ropls::opls()
+#' @param model An object created by ropls::opls()
 #' @import dplyr
 #' @import ropls
 #'

@@ -1,12 +1,23 @@
 #' Scaling Functions for Metabolomics
 #'
-#' Provides additional scaling functions besides autoscaling.  Reviewed in van den Berg et al. 2006.
+#' Provides additional scaling functions besides autoscaling.  Reviewed in van den [Berg et al. 2006](https://doi.org/10.1186/1471-2164-7-142).
 #'
 #' @param x a vector
 #' @param center logical. Do you want to apply centering?
 #' @param scale choice of scaling functions.  Defaults to autoscaling (dividing by standard deviation). See details for more.
-#'
-#' @return scaled vector with attributes showing the scaling and centering parameters
+#' 
+#' @details Currently the choices for `scale = ` allow for all of the scaling methods reviewed in 
+#' Berg et al. 2006. *Centering, scaling, and transformations: improving the biological information content of metabolomics data.*
+#'  BMC Genomics 7:142. Autoscaling divides each number by the column standard deviation. 
+#'  Pareto scaling divides each number by the square root of the column standard deviation.  
+#'  Compared to autoscaling, this stays closer to the original measurments, but is highly sensitive to large fold changes.
+#'  Range scaling divides the numbers by the column range, which may be useful in cases when scaling relative to a biologically possible 
+#'  range is desired, however this method is highly sensitive to outliers. Vast scaling multiplies the autoscaled results 
+#'  by the ratio of the column mean or some group mean to the column/group standard deviation. With this method, one could take knowledge 
+#'  of groups into account, although this isn't currently implemented in this function.  Level scaling simply divides by the column mean, 
+#'  transforming values into relative responses.
+#' 
+#' @return Scaled vector with attributes showing the scaling and centering parameters
 #' @importFrom stats sd
 #' @export
 #'

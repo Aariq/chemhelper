@@ -7,7 +7,7 @@
 calc_RI(rts, alkanesRT, C_num)
 }
 \arguments{
-\item{rts}{A vector of retention times}
+\item{rts}{A vector of retention times to be converted to retention indices}
 
 \item{alkanesRT}{A vector of retention times of standard alkanes, in descending order}
 
@@ -17,7 +17,7 @@ calc_RI(rts, alkanesRT, C_num)
 A vector of retention indices
 }
 \description{
-Calculate Van Den Dool and Kratz Retention Indicies
+This function calculates retention indices using the Van Den Dool and Kratz \href{https://webbook.nist.gov/chemistry/gc-ri/}{equation}
 }
 \examples{
 alkanes <- data.frame(RT = c(1.88, 2.23, 5.51, 8.05, 10.99,

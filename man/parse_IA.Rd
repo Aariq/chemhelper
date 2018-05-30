@@ -7,7 +7,7 @@
 parse_IA(file)
 }
 \arguments{
-\item{file}{a path to a csv file exported by IonAnalytics}
+\item{file}{raw text}
 }
 \value{
 a string.

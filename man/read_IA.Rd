@@ -10,10 +10,11 @@ read_IA(file)
 \item{file}{a path to a csv file exported by IonAnalytics}
 }
 \value{
-a dataframe
+A dataframe
 }
 \description{
 Reads csv files exported from IonAnalytics methods or integration reports.
+These csv files are poorly formatted and include line breaks within headers so \code{read_csv()} doesn't work
 }
 \examples{
 \dontrun{
