@@ -15,7 +15,7 @@ chem_scale(x, center = TRUE, scale = c("auto", "pareto", "range", "vast",
 \item{scale}{choice of scaling functions.  Defaults to autoscaling (dividing by standard deviation). See details for more.}
 }
 \value{
-scaled vector with attributes showing the scaling and centering parameters
+Scaled vector with attributes showing the scaling and centering parameters
 }
 \description{
 Provides additional scaling functions besides autoscaling.  Reviewed in van den \href{https://doi.org/10.1186/1471-2164-7-142}{Berg et al. 2006}.

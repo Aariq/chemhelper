@@ -17,4 +17,6 @@ Imports:
     tibble,
     purrr,
     webchem,
-    broom
+    broom,
+    xml2,
+    rvest
