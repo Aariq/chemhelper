@@ -10,7 +10,7 @@
 #' read_html_slow("https://cran.r-project.org/")
 read_html_slow <- function(x, ...){
   output <- xml2::read_html(x)
-  Sys.sleep(5)
+  Sys.sleep(1)
   return(output)
 }
 
@@ -22,24 +22,35 @@ read_html_slow <- function(x, ...){
 #' @param type what kind of RI
 #' @param polarity polar or non-polar
 #' @param temp_prog what kind of temperature program
+#'
+#' @importFrom rvest html_nodes
+#' @importFrom xml2 xml_length
 #' 
-#' @import rvest
 #' @return a table
 #'
 #' @examples
 #' get_RI_tables("78-70-6", "alkane", "non-polar", "custom")
+
 get_RI_tables <- function(cas, type = c("kovats", "linear", "alkane"), polarity = c("polar", "non-polar"), temp_prog = c("isothermal", "ramp", "custom")){
   type_str <- toupper(paste(type, "RI", polarity, temp_prog, sep = "-"))
   URL_detail <- paste0("https://webbook.nist.gov/cgi/cbook.cgi?ID=C",
-                       str_remove_all(cas, "-"),
+                       gsub("-", "", cas),
                        "&Units=SI&Mask=2000&Type=",
                        type_str)
   page <- read_html_slow(URL_detail)
-  #put in some sort of error cheking here to make sure the page exists!
-  tables <- rvest::html_nodes(page, ".data")
+  all.tables <- html_nodes(page, ".data")
+  if(xml_length(all.tables)==0){
+    warning(paste0("There are not RIs for CAS# ", cas, "of type ", type_str, ". Returning NA."))
+    tables <- NA
+    attr(tables, "skip") <- TRUE
+  } else {
+    tables <- all.tables
+    attr(tables, "skip") <- FALSE
+  }
   attr(tables, "type") <- type
   attr(tables, "polarity") <- polarity
   attr(tables, "temp_prog") <- temp_prog
+  
   return(tables)
 }
 
@@ -119,7 +130,7 @@ columns_iso <- function(table){
 #' Tidier for webscraped RI tables
 #'
 #' @param tables captured by `get_RI_tables`
-#'
+#' @importFrom rvest html_table
 #' @return a single table
 #' 
 #'
@@ -128,39 +139,63 @@ columns_iso <- function(table){
 #' tidy_RItable(test2)
 #' }
 tidy_RItable <- function(tables){
-  
-  temp_prog <- attr(tables, "temp_prog")
-  
-  tidy1 <- tables %>%
-    #transpose tables and fix column names
-    map({
-      . %>% 
-        html_table() %>% 
-        t() %>%
-        as.data.frame(stringsAsFactors = FALSE) %>% 
-        setNames(.[1, ]) %>% 
-        slice(-1)
-    }) %>%
-    # bind into one table
-    bind_rows()
-  if(temp_prog == "custom"){
-    tidy2 <- columns_custom(tidy1)
-  } else if(temp_prog == "ramp"){
-    tidy2 <- columns_ramp(tidy1)
-  } else if(temp_prog == "isothermal"){
-    tidy2 <- columns_iso(tidy1)
+  if(attr(tables, "skip")==TRUE){
+    output <- data.frame(NA)
+  } else {
+    temp_prog <- attr(tables, "temp_prog")
+    tidy1 <- tables %>%
+      #transpose tables and fix column names
+      map({
+        . %>% 
+          html_table() %>% 
+          t() %>%
+          as.data.frame(stringsAsFactors = FALSE) %>% 
+          setNames(.[1, ]) %>% 
+          slice(-1)
+      }) %>%
+      # bind into one table
+      bind_rows()
+    if(temp_prog == "custom"){
+      tidy2 <- columns_custom(tidy1)
+    } else if(temp_prog == "ramp"){
+      tidy2 <- columns_ramp(tidy1)
+    } else if(temp_prog == "isothermal"){
+      tidy2 <- columns_iso(tidy1)
+    }
+    
+    # fix column names %>% 
+    output <- tidy2 %>%
+      mutate_all(~na_if(., "")) %>%
+      mutate(gas = case_when(
+        str_detect(gas, "He") ~ "Helium",
+        str_detect(gas, "H2") ~ "Hydrogen",
+        str_detect(gas, "N2") ~ "Nitrogen",
+        TRUE                  ~ as.character(NA)
+      )) %>%
+      # reorder columns
+      select(type, phase, RI, everything())
   }
-  
-  # fix column names %>% 
-  output <- tidy2 %>%
-    mutate_all(~na_if(., "")) %>%
-    mutate(gas = case_when(
-      str_detect(gas, "He") ~ "Helium",
-      str_detect(gas, "H2") ~ "Hydrogen",
-      str_detect(gas, "N2") ~ "Nitrogen",
-      TRUE                  ~ as.character(NA)
-    )) %>%
-    # reorder columns
-    select(type, phase, RI, everything())
   return(output)
+}
+
+
+#' Retrieve retention indices from NIST
+#' @description This function scrapes NIST for literature retention indices given CAS numbers as an input.
+#'
+#' @param cas CAS numbers either as numeric or formatted correctly with hyphens (see format_cas())
+#' @param type Type of RI to retrieve.  Details about how these are calculated here:
+#' @param polarity "polar" to get RIs for polar columns, "non-polar" for non-polar columns
+#' @param temp_prog one of "isothermal", "ramp", or "custom"
+#'
+#' @importFrom purrr map
+#' @return a table of literature RIs
+#' @export
+#'
+#' @examples
+#' myRIs <- get_RI(c("78-70-6", "873-94-9", "13474-59-4"), "linear", "non-polar", "ramp")
+get_RI <- function(cas, type = c("kovats", "linear", "alkane"), polarity = c("polar", "non-polar"), temp_prog = c("isothermal", "ramp", "custom")){
+  map(cas, ~get_RI_tables(., type, polarity, temp_prog) %>%
+        tidy_RItable()) %>%
+    set_names(cas) %>% 
+    bind_rows(.id = "CAS")
 }
