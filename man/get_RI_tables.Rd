@@ -23,6 +23,3 @@ a table
 \description{
 Scrape Retention Indices from NIST
 }
-\examples{
-get_RI_tables("78-70-6", "alkane", "non-polar", "custom")
-}

@@ -17,6 +17,3 @@ html
 \description{
 Just adds a 5 second rest after \code{read_html()}.  Useful for web-scraping.
 }
-\examples{
-read_html_slow("https://cran.r-project.org/")
-}

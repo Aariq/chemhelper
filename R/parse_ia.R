@@ -7,12 +7,6 @@
 #' @import dplyr
 #' @import stringr
 #' 
-#'
-#' @examples
-#' \dontrun{
-#' parse_IA("report.csv")
-#' }
-#' 
 parse_IA <- function(file){
   parsed_IA <- file %>%
     str_replace_all("^.+\r\n", "") %>% #remove first line

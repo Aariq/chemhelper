@@ -6,8 +6,6 @@
 #'
 #' @return html
 #'
-#' @examples
-#' read_html_slow("https://cran.r-project.org/")
 read_html_slow <- function(x, ...){
   output <- xml2::read_html(x)
   Sys.sleep(1)
@@ -28,9 +26,6 @@ read_html_slow <- function(x, ...){
 #' 
 #' @return a table
 #'
-#' @examples
-#' get_RI_tables("78-70-6", "alkane", "non-polar", "custom")
-
 get_RI_tables <- function(cas, type = c("kovats", "linear", "alkane"), polarity = c("polar", "non-polar"), temp_prog = c("isothermal", "ramp", "custom")){
   type_str <- toupper(paste(type, "RI", polarity, temp_prog, sep = "-"))
   URL_detail <- paste0("https://webbook.nist.gov/cgi/cbook.cgi?ID=C",
@@ -59,7 +54,7 @@ get_RI_tables <- function(cas, type = c("kovats", "linear", "alkane"), polarity 
 #' custom tidier for RI tables with custom temp programs
 #'
 #' @param table 
-#'
+#' @import dplyr
 #' @return table
 #'
 columns_custom <- function(table){
@@ -81,7 +76,7 @@ columns_custom <- function(table){
 #' custom tideir for RI tables with ramp temperature programs
 #'
 #' @param table 
-#'
+#' @import dplyr
 #' @return a table
 #'
 columns_ramp <- function(table){
@@ -107,7 +102,7 @@ columns_ramp <- function(table){
 #' Custom tider for RI tables with isothermal temperature programs
 #'
 #' @param table 
-#'
+#' @import dplyr
 #' @return a table
 #'
 columns_iso <- function(table){
@@ -131,13 +126,11 @@ columns_iso <- function(table){
 #'
 #' @param tables captured by `get_RI_tables`
 #' @importFrom rvest html_table
+#' @importFrom purrr map
+#' @importFrom stats setNames
+#' @import dplyr
 #' @return a single table
 #' 
-#'
-#' @examples
-#' \dontrun{
-#' tidy_RItable(test2)
-#' }
 tidy_RItable <- function(tables){
   if(attr(tables, "skip")==TRUE){
     output <- data.frame(NA)

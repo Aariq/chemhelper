@@ -15,8 +15,3 @@ a single table
 \description{
 Tidier for webscraped RI tables
 }
-\examples{
-\dontrun{
-tidy_RItable(test2)
-}
-}
