@@ -1,8 +1,8 @@
 #' Extract VIP scores from pls object
 #' 
-#' Provides a wrapper for `ropls::getVipVn()` that returns a tibble rather than a named numeric vector.
+#' Provides a wrapper for \code{\link{getVipVn}} from the \link[ropls] package that returns a tibble rather than a named numeric vector.
 #'
-#' @param pls a pls object created by `ropls::opls()`
+#' @param pls a pls object created by \code{\link{opls}}
 #'
 #' @return a tibble
 #' 
@@ -22,6 +22,31 @@ get_VIP <- function(pls){
     rownames_to_column() %>% 
     rename(Variable = "rowname", VIP = ".")
 }
+
+#' Extract axis loadings from pls object
+#'
+#' Provides a wrapper for \code{\link{getLoadingMN}} from the \link[ropls] package that returns a tibble rather than a matrix
+#'
+#' @param pls a pls object created by \code{\link{opls}}
+#' @return a tibble
+#' 
+#' @import ropls
+#' @import tibble
+#' @import dplyr
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' pls.model <- opls(X, Y)
+#' get_loadings(pls.model)
+#' }
+get_loadings <- function(pls){
+  getLoadingMN(pls) %>% 
+    as.data.frame() %>% 
+    rownames_to_column() %>% 
+    rename(Variable = "rowname")
+}
+
 
 
 #' Format numbers correctly as CAS numbers
@@ -53,7 +78,7 @@ format_CAS <- function(x){
 #' 
 #' Extracts relevant data from an "opls" object for making annotated score plots with ggplot2 or other plotting packages.
 #'
-#' @param model An object created by ropls::opls()
+#' @param model An object created by \code{\link{opls}}
 #' @import dplyr
 #' @import ropls
 #'

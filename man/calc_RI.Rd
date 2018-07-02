@@ -27,3 +27,6 @@ alkanes <- data.frame(RT = c(1.88, 2.23, 5.51, 8.05, 10.99,
 calc_RI(11.237, alkanes$RT, alkanes$C_num)
 
 }
+\seealso{
+\code{\link{calc_RT}}
+}

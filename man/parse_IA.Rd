@@ -15,9 +15,3 @@ a string.
 \description{
 Parse IonAnalytics CSV files
 }
-\examples{
-\dontrun{
-parse_IA("report.csv")
-}
-
-}
