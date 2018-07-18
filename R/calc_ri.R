@@ -7,7 +7,7 @@
 #' @return A retention index
 #'
 #'
-.VDDK_RI <-
+VDDK_RI <-
   function(rt, alkanesRT, C_num){
     if(length(alkanesRT) != length(C_num)){
       stop("Supplied alkaneRT and C_num must be equal length")
@@ -43,7 +43,7 @@
 #' @return a retention time
 #'
 #'
-.VDDK_RT <- function(ri, alkanesRT, C_num){
+VDDK_RT <- function(ri, alkanesRT, C_num){
   if(length(alkanesRT) != length(C_num)){
     stop("Supplied alkaneRT and C_num must be equal length")
   }else{
@@ -84,7 +84,7 @@
 #' calc_RI(11.237, alkanes$RT, alkanes$C_num)
 #' 
 calc_RI <- function(rts, alkanesRT, C_num){
-  sapply(rts, .VDDK_RI, alkanesRT = alkanesRT, C_num = C_num, simplify = TRUE)
+  sapply(rts, VDDK_RI, alkanesRT = alkanesRT, C_num = C_num, simplify = TRUE)
 }
 
 
@@ -108,5 +108,5 @@ calc_RI <- function(rts, alkanesRT, C_num){
 #' calc_RT(1007.942, alkanes$RT, alkanes$C_num)
 #' 
 calc_RT <- function(ris, alkanesRT, C_num){
-  sapply(ris, .VDDK_RT, alkanesRT = alkanesRT, C_num = C_num, simplify = TRUE)
+  sapply(ris, VDDK_RT, alkanesRT = alkanesRT, C_num = C_num, simplify = TRUE)
 }

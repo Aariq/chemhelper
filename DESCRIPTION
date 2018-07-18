@@ -18,5 +18,4 @@ Imports:
     purrr,
     webchem,
     broom,
-    xml2,
-    rvest
+    MASS

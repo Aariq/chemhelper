@@ -13,7 +13,7 @@ get_loadings(pls)
 a tibble
 }
 \description{
-Provides a wrapper for \code{\link{getLoadingMN}} from the \link\link{ropls} package that returns a tibble rather than a matrix
+Provides a wrapper for \code{\link{getLoadingMN}} from the \link{ropls} package that returns a tibble rather than a matrix
 }
 \examples{
 \dontrun{

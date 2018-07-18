@@ -1,6 +1,6 @@
 #' Extract VIP scores from pls object
 #' 
-#' Provides a wrapper for \code{\link{getVipVn}} from the \link[ropls] package that returns a tibble rather than a named numeric vector.
+#' Provides a wrapper for \code{\link{getVipVn}} from the \link{ropls} package that returns a tibble rather than a named numeric vector.
 #'
 #' @param pls a pls object created by \code{\link{opls}}
 #'
@@ -25,7 +25,7 @@ get_VIP <- function(pls){
 
 #' Extract axis loadings from pls object
 #'
-#' Provides a wrapper for \code{\link{getLoadingMN}} from the \link[ropls] package that returns a tibble rather than a matrix
+#' Provides a wrapper for \code{\link{getLoadingMN}} from the \link{ropls} package that returns a tibble rather than a matrix
 #'
 #' @param pls a pls object created by \code{\link{opls}}
 #' @return a tibble
