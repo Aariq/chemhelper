@@ -61,8 +61,6 @@ sim_multvar <- function(p_uncorvar,
     set.seed(seed+1)
     corr_A <- MASS::mvrnorm(n = N/2, Sigma = S_corr_A, mu = rep(0, p_corvar)) %>% 
       as.data.frame()
-    
-    set.seed(seed)
     corr_B <- MASS::mvrnorm(n = N/2, Sigma = S_corr_B, mu = rep(0, p_corvar)) %>% 
       as.data.frame()
     

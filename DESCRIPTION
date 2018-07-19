@@ -18,4 +18,6 @@ Imports:
     purrr,
     webchem,
     broom,
-    MASS
+    MASS,
+    latex2exp,
+    ggplot2
