@@ -103,7 +103,8 @@ format_CAS <- function(x){
 get_plotdata <- function(model){
   #check object type
   if(class(model) != "opls"){
-    stop(paste("Expected a model object created by ropls::opls(), but was passed an object of class", class(model)[1]))
+    stop(paste("Expected a model object created by ropls::opls(), but was passed an object of class",
+               class(model)[1]))
   }
   if(model@typeC == "PCA"){
     scores <- model@scoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")

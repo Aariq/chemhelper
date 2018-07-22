@@ -21,3 +21,5 @@ Imports:
     MASS,
     latex2exp,
     ggplot2
+Suggests: 
+    testthat
