@@ -4,7 +4,7 @@
 \alias{sim_covar}
 \title{Simulate co-varying variables}
 \usage{
-sim_covar(df, p, var, cov, name = NA)
+sim_covar(df, p, var, cov, name = NA, seed = NA)
 }
 \arguments{
 \item{df}{a dataframe or tibble}
@@ -16,6 +16,8 @@ sim_covar(df, p, var, cov, name = NA)
 \item{cov}{covariance used to construct variance-covarinace matrix.}
 
 \item{name}{an optional name to be appended to the column names in the output}
+
+\item{seed}{an optional seed for random number generation.  If \code{NA} a random seed will be used.}
 }
 \value{
 a tibble

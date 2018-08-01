@@ -57,3 +57,27 @@ test_that("RNG is consistent for sim_discr", {
                 )
               )
 })
+
+
+test_that("sim_missing adds NAs", {
+  expect_true(sim_df(30,3) %>% 
+                sim_covar(6, var = 1, cov = 0.5) %>% 
+                sim_missing(prop = 0.1) %>% anyNA)
+})
+
+
+test_that("sim_missing adds the correct proprotion of NAs", {
+  expect_that(sim_df(10, 2) %>% 
+                sim_covar(10, var = 1, cov = 0.5) %>% 
+                sim_missing(prop = 0.1) %>% is.na() %>% sum(),
+              is_equivalent_to(10))
+})
+
+
+test_that("sim_missing works with small proportions", {
+  expect_silent(sim_df(10, 2) %>% 
+                  sim_covar(10, 1, 0, name = "uncorr") %>% 
+                  sim_covar(10, 1, 0.5, name = "corr") %>% 
+                  sim_discr(5, 1, 0, group_means = c(-1, 1), name = "discr") %>% 
+                  sim_missing(prop = 0.001))
+})

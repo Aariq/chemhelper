@@ -4,7 +4,8 @@
 \alias{sim_discr}
 \title{Simulate co-varying variables with different means by group.}
 \usage{
-sim_discr(df, p, var, cov, group_means, group = "group", name = NA)
+sim_discr(df, p, var, cov, group_means, group = "group", name = NA,
+  seed = NA)
 }
 \arguments{
 \item{df}{a dataframe containing a grouping variable column}
@@ -20,6 +21,8 @@ sim_discr(df, p, var, cov, group_means, group = "group", name = NA)
 \item{group}{specify the name of the column containing grouping variables}
 
 \item{name}{an optional name to be appended to the column names in the output}
+
+\item{seed}{an optional seed for random number generation.  If \code{NA} a random seed will be used.}
 }
 \value{
 a tibble

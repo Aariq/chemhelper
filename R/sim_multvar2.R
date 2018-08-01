@@ -47,6 +47,7 @@ set_diag <- function(x, value){
 #' 
 #' @importFrom MASS mvrnorm
 #' @import dplyr
+#' @importFrom stats runif
 #' 
 #' @export
 #'
@@ -94,6 +95,7 @@ sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
 #' @return a tibble
 #' 
 #' @importFrom MASS mvrnorm
+#' @importFrom stats runif
 #' @import dplyr
 #' @import purrr
 #' 
@@ -145,3 +147,45 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
   return(new_df)
 }
 
+
+#' Simulate missing values
+#'
+#' @param df a dataframe
+#' @param prop proportion of values to be set to NA
+#'
+#' @return a dataframe with NAs
+#' 
+#' @import dplyr
+#' @importFrom stats runif
+#' 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' df <- sim_df(10, 2) %>% 
+#' sim_covar(10, 1, 0.5) %>% 
+#' sim_missing(0.05)
+sim_missing <- 
+  function(df, prop, seed = NA){ #consider adding vars= to specify what columns.  Pass to select()
+    if(is.na(seed)){
+      seed = as.integer(runif(1) * 10e6)
+    }
+    datadim <- df %>%
+      select_if(is.double) %>% 
+      dim()
+    
+    size = datadim[1] * datadim[2]
+  
+    na.num = round(size * prop)
+    if(na.num == 0){
+      warning("No NA's will be introduced.  Select a larger proportion to introduce NAs")
+    }
+    
+    set.seed(seed)
+    na.vector <- sample(c(rep(NA, na.num), rep(0, size - na.num)), size)
+    
+    mask <- matrix(na.vector, nrow = datadim[1], ncol = datadim[2])
+    
+    newdf <- df %>% select_if(is.double) + mask
+    return(newdf)
+  }
