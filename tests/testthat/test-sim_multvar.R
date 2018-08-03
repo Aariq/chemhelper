@@ -75,9 +75,9 @@ test_that("sim_missing adds the correct proprotion of NAs", {
 
 
 test_that("sim_missing works with small proportions", {
-  expect_silent(sim_df(10, 2) %>% 
+  expect_warning(sim_df(10, 2) %>% 
                   sim_covar(10, 1, 0, name = "uncorr") %>% 
                   sim_covar(10, 1, 0.5, name = "corr") %>% 
                   sim_discr(5, 1, 0, group_means = c(-1, 1), name = "discr") %>% 
-                  sim_missing(prop = 0.001))
+                  sim_missing(prop = 0.0001))
 })

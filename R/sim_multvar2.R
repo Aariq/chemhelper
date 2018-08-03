@@ -111,11 +111,15 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
   N <- nrow(df)
   group_var <- sym(group)
   n_groups <- select(df, !!group_var) %>% unique() %>% nrow()
+  #arrange by grouping variable for easier merging later
   df <- arrange(df, !!group_var)
+  
+  #number of observations in each group
   len_groups <- df %>% 
     group_by(!!group_var) %>% 
     summarise(lens = n()) %>% 
     .$lens
+  
   if(length(group_means) != n_groups){
     stop(paste("Please supply means for all", n_groups, "groups."))
   }
@@ -132,13 +136,21 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
     Cov <- rep(cov, n_groups)
   }
   
+  #list of vcov matrices for each group
   S.list <- purrr::map2(Cov, Var,
                         ~matrix(rep(.x, p^2), ncol = p) %>%
                           set_diag(.y))
-  
+  #list of all params for pmap_df()
   l <- list(S = S.list, n = len_groups, mu = group_means)
+  
   set.seed(seed)
-  sim_data <- pmap_df(l, .f = function(S, n, mu) as.data.frame(MASS::mvrnorm(n = n, Sigma = S, mu = rep(mu, p))))
+  #for each group, use that groups vcov matrix, sample size, and group mean in mvrnorm
+  sim_data <- pmap_df(l, .f = function(S, n, mu){
+    MASS::mvrnorm(n = n,
+                  Sigma = S,
+                  mu = rep(mu, p)) %>% 
+      as.data.frame
+  })
   
   if(!is.na(name)){
     colnames(sim_data) <- paste0(name, "_", 1:p)
@@ -185,7 +197,7 @@ sim_missing <-
     na.vector <- sample(c(rep(NA, na.num), rep(0, size - na.num)), size)
     
     mask <- matrix(na.vector, nrow = datadim[1], ncol = datadim[2])
-    
-    newdf <- df %>% select_if(is.double) + mask
+    newdata <- df %>% select_if(is.double) + mask
+    newdf <- bind_cols(select_if(df, ~!is.double(.)), newdata)
     return(newdf)
   }
