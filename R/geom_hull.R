@@ -4,6 +4,7 @@
 # - Make into a geom_ or stat_ function for ggplot2
 # - alternatively, get it to work with `geom_polygon(stat = hullfn)`
 
+
 #' Calculate convex hulls by group.
 #' taken from https://gist.github.com/mbedward/26296da610fd747a9b9f62672f57e9c1.js 
 #' Author: Michael Bedward
