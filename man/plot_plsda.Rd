@@ -7,7 +7,7 @@
 plot_plsda(ropls_plsda)
 }
 \arguments{
-\item{ropls_plsda}{}
+\item{ropls_plsda}{a PLS model with a discrete Y variable produced by \code{ropls::opls()}}
 }
 \value{
 a ggplot object

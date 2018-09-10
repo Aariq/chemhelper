@@ -33,7 +33,7 @@ plot_pca <- function(ropls_pca, group_var){
 
 #' Plot PLS-DA models produced by `ropls::opls()`
 #'
-#' @param ropls_plsda 
+#' @param ropls_plsda a PLS model with a discrete Y variable produced by `ropls::opls()`
 #'
 #' @return a ggplot object
 #' 
@@ -56,6 +56,36 @@ plot_plsda <- function(ropls_plsda){
     scale_color_discrete("Group Membership") +
     theme_bw() +
     ggtitle("PLS-DA") +
+    labs(caption = TeX(
+      paste0("$R^{2}_{Y} = ", plotdata$model_stats$`R2Y(cum)`, "$; ",
+             "$Q^{2} = ", plotdata$model_stats$`Q2(cum)`, "$; ",
+             "$p_{Q^{2}} = ", plotdata$model_stats$pQ2, "$")))
+}
+
+#' Plot PLS regression models produced by `ropls::opls()`
+#'
+#' @param ropls_pls a PLS model with a discrete Y variable produced by `ropls::opls()`
+#' 
+#' @return a ggplot object
+#' 
+#' @import ggplot2
+#' @import latex2exp
+#' 
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' plot_pls(pls)
+#' }
+plot_pls <- function(ropls_pls){
+  plotdata <- chemhelper::get_plotdata(ropls_pls)
+  ggplot(plotdata$plot_data, aes(x = p1, y = p2, color = y1)) +
+    geom_point() +
+    labs(x = paste0("P1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),
+         y = paste0("P2 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +
+    scale_color_viridis_c() +
+    theme_bw() +
+    ggtitle("PLSR") +
     labs(caption = TeX(
       paste0("$R^{2}_{Y} = ", plotdata$model_stats$`R2Y(cum)`, "$; ",
              "$Q^{2} = ", plotdata$model_stats$`Q2(cum)`, "$; ",
