@@ -4,8 +4,8 @@
 \alias{chem_scale}
 \title{Scaling Functions for Metabolomics}
 \usage{
-chem_scale(x, center = TRUE, scale = c("auto", "pareto", "range", "vast",
-  "level", "none"))
+chem_scale(x, center = TRUE, scale = c("auto", "pareto", "range",
+  "vast", "level", "none"))
 }
 \arguments{
 \item{x}{a vector}
