@@ -25,8 +25,7 @@ plot_pca <- function(ropls_pca, group_var){
     theme_bw() +
     ggtitle("PCA") +
     labs(caption = latex2exp::TeX(
-      paste0(nrow(plotdata$var_explained), " principal components;",
-             "$R^2(cumulative) = ", max(plotdata$var_explained$`R2X(cum)`, "$"))))
+      paste0("$R^2(cumulative) = ", max(plotdata$var_explained$`R2X(cum)`, "$"))))
 }
 
 
