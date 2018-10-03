@@ -37,6 +37,7 @@ sim_multvar <- function(p_uncorvar,
                         group_variance = c(1, 1),
                         N,
                         seed = NA){
+  .Deprecated("sim_*()")
   # Choose a random number for seed if none is supplied
   if(is.na(seed)){
     seed = as.integer(runif(1) * 10e6)
