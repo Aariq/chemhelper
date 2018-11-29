@@ -4,7 +4,7 @@
 \alias{plot_plsda}
 \title{Plot PLS-DA models produced by \code{ropls::opls()}}
 \usage{
-plot_plsda(ropls_plsda)
+plot_plsda(ropls_plsda, annotate = c("caption", "subtitle"))
 }
 \arguments{
 \item{ropls_plsda}{a PLS model with a discrete Y variable produced by \code{ropls::opls()}}

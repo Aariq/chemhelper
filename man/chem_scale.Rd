@@ -21,7 +21,7 @@ Scaled vector with attributes showing the scaling and centering parameters
 Provides additional scaling functions besides autoscaling.  Reviewed in van den \href{https://doi.org/10.1186/1471-2164-7-142}{Berg et al. 2006}.
 }
 \details{
-Currently the choices for \code{scale =} allow for all of the scaling methods reviewed in
+Currently the choices for \code{scale = } allow for all of the scaling methods reviewed in
 Berg et al. 2006. \emph{Centering, scaling, and transformations: improving the biological information content of metabolomics data.}
 BMC Genomics 7:142. Autoscaling divides each number by the column standard deviation.
 Pareto scaling divides each number by the square root of the column standard deviation.

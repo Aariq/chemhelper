@@ -4,7 +4,7 @@
 \alias{plot_pls}
 \title{Plot PLS regression models produced by \code{ropls::opls()}}
 \usage{
-plot_pls(ropls_pls)
+plot_pls(ropls_pls, annotate = c("caption", "subtitle"))
 }
 \arguments{
 \item{ropls_pls}{a PLS model with a discrete Y variable produced by \code{ropls::opls()}}
