@@ -10,11 +10,7 @@ get_plotdata(model)
 \item{model}{An object created by \code{\link{opls}}}
 }
 \value{
-For \strong{PCA}, a list containing: principal component scores (\code{plot_data}, a data frame) and variance explained (\code{var_explained}), a named vector) for PC axes
-
-For \strong{PLS} and \strong{PLS-DA}, a list containing: A dataframe of scores along predictive axes and y-variable values (\code{plot_data}), descriptive statistics for each axis (\code{axis_stats}), and descriptive statistics for the model including R^2, Q^2, and p-value (\code{model_stats})
-
-For \strong{OPLS} and \strong{OPLS-DA}, a list containing: A dataframe of scores along one predictive axis, orthogonal axes, and y-variable values (\code{plot_data}), descriptive statistics for each axis (\code{axis_stats}), and descriptive statistics for the model including R^2, Q^2, and p-value (\code{model_stats})
+A list containing dataframes for scores, loadings, axis statistics (%variance explained), and model cross-validation
 }
 \description{
 Extracts relevant data from an "opls" object for making annotated score plots with ggplot2 or other plotting packages.

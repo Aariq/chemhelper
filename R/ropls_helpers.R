@@ -42,11 +42,120 @@ get_VIP <- function(pls){
 #' }
 get_loadings <- function(pls){
   getLoadingMN(pls) %>% 
-    as.data.frame() %>% 
-    rownames_to_column() %>% 
-    rename(Variable = "rowname")
+    as_tibble(rownames = "Variable")
 }
 
+
+#' Get axis scores from models created by `ropls::opls()`
+#' Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictve and orthogonal axis scores for OPLS and OPLS-DA models.
+#'
+#' @param model a model object created by `opls()`
+#'
+#' @return a dataframe
+#' @import ropls
+#' @import tibble
+#' @import dplyr
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' pls.model <- opls(X, Y)
+#' get_scores(pls.model)
+#' }
+get_scores <- function(model){
+  #check object type
+  if(class(model) != "opls"){
+    stop(paste("Expected a model object created by ropls::opls(), but was passed an object of class",
+               class(model)[1]))
+  }
+  
+  if(model@typeC == "PCA"){
+    plot_data <-
+      model@scoreMN %>%
+      as_tibble(rownames = "sample")
+ 
+  } else if(model@typeC == "PLS-DA"){
+    y <-
+      model@suppLs$yMCN %>%
+      as_tibble(rownames = "sample")
+    scores <-
+      model@scoreMN %>%
+      as_tibble(rownames = "sample")
+    plot_data <- full_join(y, scores)
+    
+  } else if(model@typeC == "OPLS-DA"){
+    #make a OPLS-DA data frame
+    pred.scores <-
+      model@scoreMN %>%
+      as_tibble(rownames = "sample")
+    ortho.scores <-
+      model@orthoScoreMN %>%
+      as_tibble(rownames = "sample")
+    scores <-
+      full_join(pred.scores, ortho.scores)
+    y <-
+      model@suppLs$yMCN %>%
+      as_tibble(rownames = "sample")
+    plot_data <- full_join(y, scores)
+  
+  } else if(model@typeC == "PLS"){
+    #make a PLS data frame
+    scores <-
+      model@scoreMN %>%
+      as_tibble(rownames = "sample")
+    y <-
+      model@suppLs$yMCN %>%
+      as_tibble(rownames = "sample")
+    plot_data <- full_join(y ,scores)
+    
+  } else if(model@typeC == "OPLS"){
+    #make an OPLS data frame
+    pred.scores <-
+      model@scoreMN %>%
+      as_tibble(rownames = "sample")
+    ortho.scores <-
+      model@orthoScoreMN %>%
+      as_tibble(rownames = "sample")
+    scores <-
+      full_join(pred.scores, ortho.scores)
+    y <-
+      model@suppLs$yMCN %>%
+      as_tibble(rownames = "sample")
+    plot_data <- full_join(y, scores)
+  }
+  return(plot_data)
+}
+
+
+
+#' Retrieve model parameters from models created by `ropls::opls()`
+#' For PCA, returns percent variance explained by each axis.  For (o)PLS(-DA), returns variance explained by axes and cross-validation statistics.
+#'
+#' @param model a model object created by `opls()`
+#'
+#' @return a list of two dataframes, `axis_stats` and `validation`
+#' @import ropls
+#' @import tibble
+#' @import dplyr
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' pls.model <- opls(X, Y)
+#' get_modelinfo(pls.model)
+#' }
+get_modelinfo <- function(model){
+  #check object type
+  if(class(model) != "opls"){
+    stop(paste("Expected a model object created by ropls::opls(), but was passed an object of class",
+               class(model)[1]))
+  } else {
+    axis_stats <- model@modelDF
+    validation <- model@summaryDF
+  }
+  return(list("axis_stats" = axis_stats,
+              "model_stats" = validation))
+}
 
 #' Extract data for plotting (O)PLS(-DA) data with ggplot2
 #' 
@@ -56,11 +165,7 @@ get_loadings <- function(pls){
 #' @import dplyr
 #' @import ropls
 #'
-#' @return For **PCA**, a list containing: principal component scores (`plot_data`, a data frame) and variance explained (`var_explained`), a named vector) for PC axes
-#' 
-#' For **PLS** and **PLS-DA**, a list containing: A dataframe of scores along predictive axes and y-variable values (`plot_data`), descriptive statistics for each axis (`axis_stats`), and descriptive statistics for the model including R^2, Q^2, and p-value (`model_stats`)
-#' 
-#' For **OPLS** and **OPLS-DA**, a list containing: A dataframe of scores along one predictive axis, orthogonal axes, and y-variable values (`plot_data`), descriptive statistics for each axis (`axis_stats`), and descriptive statistics for the model including R^2, Q^2, and p-value (`model_stats`)
+#' @return A list containing dataframes for scores, loadings, axis statistics (%variance explained), and model cross-validation
 #' 
 #' @export
 #'
@@ -75,61 +180,8 @@ get_loadings <- function(pls){
 #' }
 
 get_plotdata <- function(model){
-  #check object type
-  if(class(model) != "opls"){
-    stop(paste("Expected a model object created by ropls::opls(), but was passed an object of class",
-               class(model)[1]))
-  }
-  if(model@typeC == "PCA"){
-    scores <- model@scoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    plot_data <- scores
-    
-    var_explained <- model@modelDF[ , 1:2]
-    
-    return(list("plot_data" = plot_data,
-                "var_explained" = var_explained))
-    
-  } else if(model@typeC == "PLS-DA"){
-    y <- model@suppLs$yMCN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    scores <- model@scoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    plot_data <- full_join(y, scores)
-    
-    return(list("plot_data" = plot_data,
-                "axis_stats" = model@modelDF,
-                "model_stats" = model@summaryDF)) 
-    
-  } else if(model@typeC == "OPLS-DA"){
-    #make a OPLS-DA data frame
-    pred.scores <- model@scoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    ortho.scores <- model@orthoScoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    scores <- full_join(pred.scores, ortho.scores)
-    y <- model@suppLs$yMCN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    plot_data <- full_join(y, scores)
-    
-    return(list("plot_data" = plot_data,
-                "axis_stats" = model@modelDF,
-                "model_stats" = model@summaryDF))
-    
-  } else if(model@typeC == "PLS"){
-    #make a PLS data frame
-    scores <- model@scoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    y <- model@suppLs$yMCN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    plot_data <- full_join(y ,scores)
-    
-    return(list("plot_data" = plot_data,
-                "axis_stats" = model@modelDF,
-                "model_stats" = model@summaryDF)) 
-    
-  } else if(model@typeC == "OPLS"){
-    #make an OPLS data frame
-    pred.scores <- model@scoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    ortho.scores <- model@orthoScoreMN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    scores <- full_join(pred.scores, ortho.scores)
-    y <- model@suppLs$yMCN %>% as.data.frame() %>% rownames_to_column(var = "sample")
-    plot_data <- full_join(y, scores)
-    
-    return(list("plot_data" = plot_data,
-                "axis_stats" = model@modelDF,
-                "model_stats" = model@summaryDF))
-  }
+  return(list("scores" = get_scores(model), #this gonna break things :-(
+              "loadings" = get_loadings(model),
+              "axis_stats" = model@modelDF,
+              "model_stats" = model@summaryDF))
 }
