@@ -6,15 +6,15 @@ test_that("returns plots", {
   data(foods) ## see Eriksson et al. (2001); presence of 3 missing values (NA)
   foodMN <- as.matrix(foods[, colnames(foods) != "Country"])
   rownames(foodMN) <- foods[, "Country"]
-  foo.pca <- opls(foodMN)
+  foo.pca <- opls(foodMN, plotL = FALSE)
   
   data(cornell) ## see Tenenhaus, 1998
   cornell.pls <- opls(as.matrix(cornell[, grep("x", colnames(cornell))]),
-                      cornell[, "y"])
+                      cornell[, "y"], plotL = FALSE)
   
   data(sacurine)
-  sacurine.plsda <- opls(sacurine$dataMatrix, sacurine$sampleMetadata[, "gender"])
-  sacurine.oplsda <- opls(sacurine$dataMatrix, sacurine$sampleMetadata[, "gender"], predI = 1, orthoI = NA)
+  sacurine.plsda <- opls(sacurine$dataMatrix, sacurine$sampleMetadata[, "gender"], plotL = FALSE)
+  sacurine.oplsda <- opls(sacurine$dataMatrix, sacurine$sampleMetadata[, "gender"], predI = 1, orthoI = NA, plotL = FALSE)
   
   
   expect_is(plot_pca(foo.pca), "ggplot")

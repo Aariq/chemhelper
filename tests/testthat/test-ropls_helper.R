@@ -8,14 +8,14 @@ test_that("get_scores fails if not ropls model", {
 
 test_that("get_scores works with PCA", {
   expect_is(
-    opls(mtcars) %>% get_scores(),
+    opls(mtcars, plotL = FALSE) %>% get_scores(),
     "data.frame"
   )
 })
 
 test_that("get_scores works with PLS", {
   expect_is(
-    opls(dplyr::select(mtcars, -mpg), mtcars$mpg) %>% get_scores(),
+    opls(dplyr::select(mtcars, -mpg), mtcars$mpg, plotL = FALSE) %>% get_scores(),
     "data.frame"
   )
 })
