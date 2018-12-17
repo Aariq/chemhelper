@@ -4,12 +4,15 @@
 \alias{plot_pca}
 \title{Plot PCA models created by \code{ropls::opls()}}
 \usage{
-plot_pca(ropls_pca, group_var, annotate = c("caption", "subtitle"))
+plot_pca(ropls_pca, group_var = NULL, annotate = c("caption",
+  "subtitle"))
 }
 \arguments{
 \item{ropls_pca}{}
 
 \item{group_var}{}
+
+\item{annotate}{place to put model statistics on the plot}
 }
 \value{
 a ggplot object

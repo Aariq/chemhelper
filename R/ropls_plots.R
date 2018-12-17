@@ -2,6 +2,7 @@
 #'
 #' @param ropls_pca 
 #' @param group_var 
+#' @param annotate place to put model statistics on the plot
 #'
 #' @return a ggplot object
 #' 
@@ -14,18 +15,23 @@
 #' \dontrun{
 #' plot_pca(pca, data$treatment)
 #' }
-plot_pca <- function(ropls_pca, group_var, annotate = c("caption", "subtitle")){
+plot_pca <- function(ropls_pca, group_var = NULL, annotate = c("caption", "subtitle")){
   plotdata <- chemhelper::get_plotdata(ropls_pca)
-  p <- ggplot(plotdata$plot_data, aes(x = p1, y = p2, color = group_var)) +
+  if(is.null(group_var)){
+    base <- ggplot(plotdata$scores, aes(x = p1, y = p2))
+  } else {
+    base <- ggplot(plotdata$scores, aes(x = p1, y = p2, color = group_var))
+  }
+  p <- base +
     geom_point() +
     stat_ellipse() +
-    labs(x = paste0("PC1 (", plotdata$var_explained$R2X[1] * 100, "%)"),
-         y = paste0("PC2 (", plotdata$var_explained$R2X[2] * 100, "%)")) +
+    labs(x = paste0("PC1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),
+         y = paste0("PC2 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +
     scale_colour_discrete("Group Membership") +
     theme_bw() +
     labs(title = "PCA")
   stats <- latex2exp::TeX(
-    paste0("$R^2(cumulative) = ", max(plotdata$var_explained$`R2X(cum)`, "$")))
+    paste0("$R^2(cumulative) = ", max(plotdata$model_stats$`R2X(cum)`, "$")))
   if(annotate == "caption"){
   p + labs(caption = stats)
   } else if(annotate == "subtitle"){
@@ -40,7 +46,7 @@ plot_pca <- function(ropls_pca, group_var, annotate = c("caption", "subtitle")){
 #' Plot PLS-DA models produced by `ropls::opls()`
 #'
 #' @param ropls_plsda a PLS model with a discrete Y variable produced by `ropls::opls()`
-#'
+#' @param annotate place to put model statistics on the plot
 #' @return a ggplot object
 #' 
 #' @import latex2exp
@@ -54,7 +60,7 @@ plot_pca <- function(ropls_pca, group_var, annotate = c("caption", "subtitle")){
 #' }
 plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
   plotdata <- chemhelper::get_plotdata(ropls_plsda)
-  p <- ggplot(plotdata$plot_data, aes(x = p1, y = p2, color = y1)) +
+  p <- ggplot(plotdata$scores, aes(x = p1, y = p2, color = y1)) +
     geom_point() +
     stat_ellipse() +
     labs(x = paste0("P1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),
@@ -78,7 +84,7 @@ plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
 #' Plot PLS regression models produced by `ropls::opls()`
 #'
 #' @param ropls_pls a PLS model with a discrete Y variable produced by `ropls::opls()`
-#' 
+#' @param annotate place to put model statistics on the plot
 #' @return a ggplot object
 #' 
 #' @import ggplot2
@@ -92,7 +98,7 @@ plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
 #' }
 plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
   plotdata <- chemhelper::get_plotdata(ropls_pls)
-  p <- ggplot(plotdata$plot_data, aes(x = p1, y = p2, color = y1)) +
+  p <- ggplot(plotdata$scores, aes(x = p1, y = p2, color = y1)) +
     geom_point() +
     labs(x = paste0("P1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),
          y = paste0("P2 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +
@@ -117,7 +123,7 @@ plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
 #' Plot OPLS regression models produced by `ropls::opls()`
 #'
 #' @param ropls_pls a PLS model with a discrete Y variable produced by `ropls::opls()`
-#' @param annotate where to put the model stats
+#' @param annotate place to put model statistics on the plot
 #'
 #' @return a ggplot object
 #' @import ggplot2
@@ -130,7 +136,7 @@ plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
 #' }
 plot_opls <- function(ropls_pls, annotate = c("caption", "subtitle")){
   plotdata <- chemhelper::get_plotdata(ropls_pls)
-  p <- ggplot(plotdata$plot_data, aes(x = p1, y = o1, color = y1)) +
+  p <- ggplot(plotdata$scores, aes(x = p1, y = o1, color = y1)) +
     geom_point() +
     labs(x = paste0("P1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),
          y = paste0("P2 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +

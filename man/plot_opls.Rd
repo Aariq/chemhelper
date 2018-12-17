@@ -9,7 +9,7 @@ plot_opls(ropls_pls, annotate = c("caption", "subtitle"))
 \arguments{
 \item{ropls_pls}{a PLS model with a discrete Y variable produced by \code{ropls::opls()}}
 
-\item{annotate}{where to put the model stats}
+\item{annotate}{place to put model statistics on the plot}
 }
 \value{
 a ggplot object
