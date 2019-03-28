@@ -18,7 +18,7 @@
 plot_pca <- function(ropls_pca, group_var = NULL, annotate = c("caption", "subtitle")){
   plotdata <- chemhelper::get_plotdata(ropls_pca)
   if(is.null(group_var)){
-    base <- ggplot(plotdata$scores, aes(x = p1, y = p2))
+    base <- ggplot(plotdata$scores, aes(x = p1, y = p2)) #this needs tidyeval help I think.
   } else {
     base <- ggplot(plotdata$scores, aes(x = p1, y = p2, color = group_var))
   }
