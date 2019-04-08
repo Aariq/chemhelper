@@ -1,11 +1,11 @@
-#' Extract VIP scores from pls object
-#' 
+#' Get VIP scores from PLS and OPLS models created by `ropls::opls()`
+#'
 #' Provides a wrapper for \code{\link{getVipVn}} from the \link{ropls} package that returns a tibble rather than a named numeric vector.
 #'
-#' @param pls a pls object created by \code{\link{opls}}
+#' @param .model a pls object created by \code{\link{opls}}
 #'
 #' @return a tibble
-#' 
+#'
 #' @import ropls
 #' @import tibble
 #' @import dplyr
@@ -16,20 +16,22 @@
 #' pls.model <- opls(X, Y)
 #' get_VIP(pls.model)
 #' }
-get_VIP <- function(pls){
-  getVipVn(pls) %>%
-    as.data.frame() %>% 
-    rownames_to_column() %>% 
-    rename(Variable = "rowname", VIP = ".")
+get_VIP <- function(.model){
+  if(.model@typeC == "PCA"){
+    stop("VIP scores are only available for (O)PLS(-DA) models")
+  }
+  getVipVn(.model) %>%
+    enframe(name = "Variable") %>%
+    rename(VIP = "value")
 }
 
-#' Extract axis loadings from pls object
+#' Get axis loadings from models created by `ropls::opls()`
 #'
 #' Provides a wrapper for \code{\link{getLoadingMN}} from the \link{ropls} package that returns a tibble rather than a matrix
 #'
-#' @param pls a pls object created by \code{\link{opls}}
+#' @param .model a pls object created by \code{\link{opls}}
 #' @return a tibble
-#' 
+#'
 #' @import ropls
 #' @import tibble
 #' @import dplyr
@@ -40,14 +42,14 @@ get_VIP <- function(pls){
 #' pls.model <- opls(X, Y)
 #' get_loadings(pls.model)
 #' }
-get_loadings <- function(pls){
-  getLoadingMN(pls) %>% 
+get_loadings <- function(.model){
+  getLoadingMN(.model) %>%
     as_tibble(rownames = "Variable")
 }
 
 
 #' Get axis scores from models created by `ropls::opls()`
-#' Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictve and orthogonal axis scores for OPLS and OPLS-DA models.
+#' Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictive and orthogonal axis scores for OPLS and OPLS-DA models.
 #'
 #' @param model a model object created by `opls()`
 #'
@@ -68,12 +70,12 @@ get_scores <- function(model){
     stop(paste("Expected a model object created by ropls::opls(), but was passed an object of class",
                class(model)[1]))
   }
-  
+
   if(model@typeC == "PCA"){
     plot_data <-
       model@scoreMN %>%
       as_tibble(rownames = "sample")
- 
+
   } else if(model@typeC == "PLS-DA"){
     y <-
       model@suppLs$yMCN %>%
@@ -81,8 +83,8 @@ get_scores <- function(model){
     scores <-
       model@scoreMN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y, scores)
-    
+    plot_data <- full_join(y, scores, by = "sample")
+
   } else if(model@typeC == "OPLS-DA"){
     #make a OPLS-DA data frame
     pred.scores <-
@@ -92,12 +94,12 @@ get_scores <- function(model){
       model@orthoScoreMN %>%
       as_tibble(rownames = "sample")
     scores <-
-      full_join(pred.scores, ortho.scores)
+      full_join(pred.scores, ortho.scores, by = "sample")
     y <-
       model@suppLs$yMCN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y, scores)
-  
+    plot_data <- full_join(y, scores, by = "sample")
+
   } else if(model@typeC == "PLS"){
     #make a PLS data frame
     scores <-
@@ -106,8 +108,8 @@ get_scores <- function(model){
     y <-
       model@suppLs$yMCN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y ,scores)
-    
+    plot_data <- full_join(y ,scores, by = "sample")
+
   } else if(model@typeC == "OPLS"){
     #make an OPLS data frame
     pred.scores <-
@@ -117,11 +119,11 @@ get_scores <- function(model){
       model@orthoScoreMN %>%
       as_tibble(rownames = "sample")
     scores <-
-      full_join(pred.scores, ortho.scores)
+      full_join(pred.scores, ortho.scores, by = "sample")
     y <-
       model@suppLs$yMCN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y, scores)
+    plot_data <- full_join(y, scores, by = "sample")
   }
   return(plot_data)
 }
@@ -158,7 +160,7 @@ get_modelinfo <- function(model){
 }
 
 #' Extract data for plotting (O)PLS(-DA) data with ggplot2
-#' 
+#'
 #' Extracts relevant data from an "opls" object for making annotated score plots with ggplot2 or other plotting packages.
 #'
 #' @param model An object created by \code{\link{opls}}
@@ -166,7 +168,7 @@ get_modelinfo <- function(model){
 #' @import ropls
 #'
 #' @return A list containing dataframes for scores, loadings, axis statistics (%variance explained), and model cross-validation
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -180,7 +182,7 @@ get_modelinfo <- function(model){
 #' }
 
 get_plotdata <- function(model){
-  return(list("scores" = get_scores(model), #this gonna break things :-(
+  return(list("scores" = get_scores(model),
               "loadings" = get_loadings(model),
               "axis_stats" = model@modelDF,
               "model_stats" = model@summaryDF))
