@@ -2,12 +2,12 @@
 % Please edit documentation in R/ropls_helpers.R
 \name{get_VIP}
 \alias{get_VIP}
-\title{Extract VIP scores from pls object}
+\title{Get VIP scores from PLS and OPLS models created by \code{ropls::opls()}}
 \usage{
-get_VIP(pls)
+get_VIP(.model)
 }
 \arguments{
-\item{pls}{a pls object created by \code{\link{opls}}}
+\item{.model}{a pls object created by \code{\link{opls}}}
 }
 \value{
 a tibble

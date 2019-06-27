@@ -2,12 +2,12 @@
 % Please edit documentation in R/ropls_helpers.R
 \name{get_loadings}
 \alias{get_loadings}
-\title{Extract axis loadings from pls object}
+\title{Get axis loadings from models created by \code{ropls::opls()}}
 \usage{
-get_loadings(pls)
+get_loadings(.model)
 }
 \arguments{
-\item{pls}{a pls object created by \code{\link{opls}}}
+\item{.model}{a pls object created by \code{\link{opls}}}
 }
 \value{
 a tibble
