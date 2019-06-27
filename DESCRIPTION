@@ -22,4 +22,5 @@ Imports:
     latex2exp,
     ggplot2
 Suggests: 
-    testthat
+    testthat,
+    covr
